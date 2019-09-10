@@ -1,0 +1,22 @@
+#Connect to Exchange Online Powershell
+#Pre MFA
+$LiveCred = Get-Credential
+$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.outlook.com/powershell/ -Credential $LiveCred -Authentication Basic –AllowRedirection
+Import-PSSession $Session
+#MFA
+https://docs.microsoft.com/en-us/powershell/exchange/exchange-online/connect-to-exchange-online-powershell/mfa-connect-to-exchange-online-powershell?view=exchange-ps
+Connect-EXOPSSession
+
+#Enable Junk Filter
+Get-Mailbox | Set-MailboxJunkEmailConfiguration –Enabled $True
+#Allow Read access to TenantAdmins
+Get-Mailbox | Add-MailboxPermission $_.identity -User TenantAdmins@chadoak.com.au -AccessRights fullaccess -InheritanceType all
+
+#Get Users
+$user = Get-Mailbox -ResultSize unlimited -Filter {(RecipientTypeDetails -eq 'UserMailbox') -and (Alias -ne 'Admin')} | Select Identity
+#Allow Read access to TenantAdmins
+$user | foreach {Add-MailboxPermission $_.identity -User TenantAdmins@chadoak.com.au -AccessRights fullaccess -InheritanceType all}
+#Enable Junk FIlter
+$user | foreach {Set-MailboxJunkEmailConfiguration $_.identity –Enabled $True}﻿
+
+

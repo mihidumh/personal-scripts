@@ -1,3 +1,8 @@
+#2020
+Connect-EchangeOnline
+Get-EXOmailbox -ResultSize unlimited | Select identity | Add-MailboxPermission -User tenantadmins@chadoak.com.au -AccessRights fullaccess -InheritanceType all 
+
+
 #Connect to Exchange Online Powershell
 #Pre MFA
 $LiveCred = Get-Credential

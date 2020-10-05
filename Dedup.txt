@@ -1,0 +1,14 @@
+Start-DedupJob -Type Optimization -Volume L:
+Start-DedupJob -Type Optimization -Volume M:
+Start-DedupJob -Type Optimization -Volume H:
+
+do 
+{
+    Get-DedupStatus
+	$state = Get-DedupJob | Sort-Object StartTime -Descending 
+    $state | ft
+    if ($state -eq $null) {Write-Output "Completing, please wait..."}
+    sleep -s 60
+} while ($state -ne $null)
+ 
+
